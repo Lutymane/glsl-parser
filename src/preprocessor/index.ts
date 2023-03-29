@@ -21,3 +21,4 @@ const preprocess = (src: string, options: PreprocessorOptions) =>
 export default preprocess;
 
 export { preprocessAst, preprocessComments, generate, preprocess, parse };
+export type { PreprocessorProgram } from './preprocessor.js';
