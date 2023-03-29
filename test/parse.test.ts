@@ -2,12 +2,21 @@ import fs from 'fs';
 import path from 'path';
 import peggy, { GrammarError } from 'peggy';
 import util from 'util';
-import { generate } from './generator';
-import { AstNode, FunctionNode, ScopeIndex, Scope } from '../ast';
-import { Parser, ParserOptions } from './parser';
-import { renameBindings, renameFunctions, renameTypes } from './utils';
-import { preprocessAst } from '../preprocessor/preprocessor';
-import generatePreprocess from '../preprocessor/generator';
+
+import { generate } from '../dist/parser/generator';
+import type { Parser, ParserOptions } from '../dist';
+
+import type { AstNode, FunctionNode, ScopeIndex, Scope } from '../dist/ast';
+
+import {
+  renameBindings,
+  renameFunctions,
+  renameTypes,
+} from '../dist/parser/utils';
+import {
+  preprocessAst,
+  generate as generatePreprocess,
+} from '../dist/preprocessor';
 
 const fileContents = (filePath: string) => fs.readFileSync(filePath).toString();
 
@@ -40,7 +49,7 @@ const debugScopes = (scopes: Scope[]) =>
   }));
 
 const grammar = fileContents('./src/parser/glsl-grammar.pegjs');
-const testFile = fileContents('./src/parser/glsltest.glsl');
+const testFile = fileContents('./test/glsltest.glsl');
 
 const parser = peggy.generate(grammar, { cache: true }) as Parser;
 

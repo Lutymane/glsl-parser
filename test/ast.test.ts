@@ -1,5 +1,5 @@
-import { visit } from '.';
-import { AstNode, BinaryNode } from './node';
+import { visit } from '../dist/ast';
+import type { AstNode, BinaryNode } from '../dist/ast';
 
 test('visit()', () => {
   const tree: BinaryNode = {
@@ -40,8 +40,9 @@ test('visit()', () => {
       enter: (path) => {
         const { node } = path;
         if (node.identifier === 'foo') {
-          grandparent = path.findParent(({ node }) => node.operator === '-')
-            ?.node;
+          grandparent = path.findParent(
+            ({ node }) => node.operator === '-'
+          )?.node;
           parent = path.findParent(({ node }) => node.operator === '+')?.node;
           unfound = path.findParent(({ node }) => node.operator === '*')?.node;
         }

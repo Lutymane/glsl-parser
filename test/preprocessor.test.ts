@@ -6,8 +6,8 @@ import {
   preprocessComments,
   preprocessAst,
   PreprocessorProgram,
-} from './preprocessor';
-import generate from './generator';
+  generate,
+} from '../dist/preprocessor';
 
 const fileContents = (filePath: string): string =>
   fs.readFileSync(filePath).toString();
