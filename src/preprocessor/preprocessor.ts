@@ -1,4 +1,4 @@
-import { visit, Path, NodeVisitor, AstNode } from '../ast';
+import { visit, Path, NodeVisitor, AstNode } from '../ast/index.js';
 import {
   PreprocessorAstNode,
   PreprocessorConditionalNode,
@@ -7,7 +7,7 @@ import {
   PreprocessorIfNode,
   PreprocessorLiteralNode,
   PreprocessorSegmentNode,
-} from './preprocessor-node';
+} from './preprocessor-node.js';
 
 export type PreprocessorProgram = {
   type: string;
@@ -407,10 +407,12 @@ const evaluteExpression = (node: PreprocessorAstNode, macros: Macros) =>
     },
   });
 
-const shouldPreserve = (preserve: NodePreservers = {}) => (path: Path<any>) => {
-  const test = preserve?.[path.node.type];
-  return typeof test === 'function' ? test(path) : test;
-};
+const shouldPreserve =
+  (preserve: NodePreservers = {}) =>
+  (path: Path<any>) => {
+    const test = preserve?.[path.node.type];
+    return typeof test === 'function' ? test(path) : test;
+  };
 
 // HACK: The AST visitors are hard coded to the GLSL AST (not preprocessor AST)
 // types. I'm not clever enough to make the core AST type geneeric so that both
