@@ -193,4 +193,4 @@ const generators: NodeGenerators = {
 const generate = makeGenerator(generators);
 const generateWithEveryOther = makeEveryOtherGenerator(generate);
 
-export default generate;
+export { generate };

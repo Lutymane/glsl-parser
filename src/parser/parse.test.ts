@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import peggy, { GrammarError } from 'peggy';
 import util from 'util';
-import generate from './generator';
+import { generate } from './generator';
 import { AstNode, FunctionNode, ScopeIndex, Scope } from '../ast';
 import { Parser, ParserOptions } from './parser';
 import { renameBindings, renameFunctions, renameTypes } from './utils';

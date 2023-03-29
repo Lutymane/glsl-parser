@@ -1,4 +1,2 @@
-import generate from './parser/generator';
-import parser from './parser/parser';
-
-export = { generate, parser };
+export * from './parser/generator';
+export * from './parser/parser';
