@@ -9,27 +9,27 @@
   const makeScope = (name, parent) => ({
     name,
     parent,
-    bindings: {},
-    types: {},
-    functions: {},
+    bindings: new Map(),
+    types: new Map(),
+    functions: new Map(),
   });
 
   // Types (aka struct) scope
   const addTypes = (scope, ...types) => {
     types.forEach(([identifier, type]) => {
-      scope.types[identifier] = {
+      scope.types.set(identifier, {
         references: [type]
-      };
+      });
     });
   };
   const addTypeReference = (scope, name, reference) => {
-    scope.types[name].references.push(reference);
+    scope.types.get(name).references.push(reference);
   };
   const findTypeScope = (scope, typeName) => {
     if(!scope) {
       return null;
     }
-    if(typeName in scope.types) {
+    if(scope.types.has(typeName)) {
       return scope;
     }
     return findTypeScope(scope.parent, typeName);
@@ -39,10 +39,10 @@
   // Bindings (aka variables, parameters) scope
   const createBindings = (scope, ...bindings) => {
     bindings.forEach(([identifier, binding]) => {
-      const newBinding = scope.bindings[identifier] || { references: [] };
+      const newBinding = scope.bindings.get(identifier) ?? { references: [] };
       newBinding.initializer = binding;
       newBinding.references.unshift(binding);
-      scope.bindings[identifier] = newBinding
+      scope.bindings.set(identifier, newBinding)
     });
   };
   const addBindingReference = (scope, name, reference) => {
@@ -52,7 +52,7 @@
     const foundScope = findBindingScope(scope, name);
     if(foundScope) {
       // console.log(name, 'found in scope', foundScope);
-      foundScope.bindings[name].references.push(reference);
+      foundScope.bindings.get(name).references.push(reference);
     } else {
       // console.log(name,'not found in current scope, creating binding in', scope);
       createBindings(scope, [name, reference]);
@@ -62,7 +62,7 @@
     if(!scope) {
       return null;
     }
-    if(name in scope.bindings) {
+    if(scope.bindings.has(name)) {
       return scope;
     }
     return findBindingScope(scope.parent, name);
@@ -70,18 +70,18 @@
 
   // Function scope
   const createFunction = (scope, name, declaration) => {
-    scope.functions[name] = { references: [declaration] }
+    scope.functions.set(name, { references: [declaration] })
   };
   const addFunctionReference = (scope, name, reference) => {
     const global = findGlobalScope(scope);
-    if(name in global.functions) {
-      global.functions[name].references.push(reference);
+    if(global.functions.has(name)) {
+      global.functions.get(name).references.push(reference);
     } else {
       createFunction(global, name, reference);
     }
   };
   const findGlobalScope = scope => scope.parent ? findGlobalScope(scope.parent) : scope;
-  const isDeclaredFunction = (scope, fnName) => fnName in findGlobalScope(scope).functions;
+  const isDeclaredFunction = (scope, fnName) => findGlobalScope(scope).functions.has(fnName);
 
   // A "partial" is data that's computed as part of a production, but is then
   // merged into some higher rule, and doesn't itself become a node.
