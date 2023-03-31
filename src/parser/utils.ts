@@ -4,7 +4,7 @@ export const renameBindings = (
   scope: Scope,
   mangle: (name: string, node: AstNode) => string
 ) => {
-  Object.entries(scope.bindings).forEach(([name, binding]) => {
+  for (let [name, binding] of scope.bindings) {
     binding.references.forEach((node) => {
       if (node.type === 'declaration') {
         node.identifier.identifier = mangle(node.identifier.identifier, node);
@@ -31,14 +31,14 @@ export const renameBindings = (
         throw new Error(`Binding for type ${node.type} not recognized`);
       }
     });
-  });
+  }
 };
 
 export const renameTypes = (
   scope: Scope,
   mangle: (name: string, node: AstNode) => string
 ) => {
-  Object.entries(scope.types).forEach(([name, type]) => {
+  for (let [name, type] of scope.types) {
     type.references.forEach((node) => {
       if (node.type === 'struct') {
         node.typeName.identifier = mangle(node.typeName.identifier, node);
@@ -57,14 +57,14 @@ export const renameTypes = (
         throw new Error(`Binding for type ${node.type} not recognized`);
       }
     });
-  });
+  }
 };
 
 export const renameFunctions = (
   scope: Scope,
   mangle: (name: string, node: AstNode) => string
 ) => {
-  Object.entries(scope.functions).forEach(([name, binding]) => {
+  for (let [name, binding] of scope.functions) {
     binding.references.forEach((node) => {
       if (node.type === 'function') {
         node['prototype'].header.name.identifier = mangle(
@@ -94,5 +94,5 @@ export const renameFunctions = (
         throw new Error(`Function for type ${node.type} not recognized`);
       }
     });
-  });
+  }
 };

@@ -33,7 +33,7 @@ const preprocess = (program: string) => {
 };
 
 const debugEntry = (bindings: ScopeIndex) => {
-  return Object.entries(bindings).map(
+  return [...bindings.entries()].map(
     ([k, v]) =>
       `"${k}": (${v.references.length} references): ${v.references
         .map((r) => r.type)
@@ -138,7 +138,7 @@ coherent buffer Block {
   vec4 member2;
 };`);
   // debugAst(ast);
-  expect(Object.keys(ast.scopes[0].bindings)).toEqual([
+  expect([...ast.scopes[0].bindings.keys()]).toEqual([
     'a',
     'b',
     'c',
@@ -153,8 +153,8 @@ coherent buffer Block {
     'arr3',
     'Block',
   ]);
-  expect(Object.keys(ast.scopes[0].functions)).toEqual(['fnName']);
-  expect(Object.keys(ast.scopes[0].types)).toEqual(['light']);
+  expect([...ast.scopes[0].functions.keys()]).toEqual(['fnName']);
+  expect([...ast.scopes[0].types.keys()]).toEqual(['light']);
 });
 
 test('scope references', () => {
@@ -198,23 +198,23 @@ vec3 fnName(float arg1, vec3 arg2) {
   protoFn(1.0);
   useMe();
 }`);
-  expect(ast.scopes[0].bindings.a.references).toHaveLength(2);
-  expect(ast.scopes[0].bindings.b.references).toHaveLength(1);
-  expect(ast.scopes[0].bindings.c.references).toHaveLength(1);
-  expect(ast.scopes[0].bindings.myMat.references).toHaveLength(1);
-  expect(ast.scopes[0].bindings.structArr.references).toHaveLength(2);
-  expect(ast.scopes[0].bindings.shadowed.references).toHaveLength(1);
-  expect(ast.scopes[0].types.structType.references).toHaveLength(2);
-  expect(ast.scopes[0].functions.useMe.references).toHaveLength(2);
-  expect(ast.scopes[2].bindings.arg1.references).toHaveLength(2);
-  expect(ast.scopes[2].bindings.arg2.references).toHaveLength(1);
-  expect(ast.scopes[2].bindings.shadowed.references).toHaveLength(4);
+  expect(ast.scopes[0].bindings.get('a')!.references).toHaveLength(2);
+  expect(ast.scopes[0].bindings.get('b')!.references).toHaveLength(1);
+  expect(ast.scopes[0].bindings.get('c')!.references).toHaveLength(1);
+  expect(ast.scopes[0].bindings.get('myMat')!.references).toHaveLength(1);
+  expect(ast.scopes[0].bindings.get('structArr')!.references).toHaveLength(2);
+  expect(ast.scopes[0].bindings.get('shadowed')!.references).toHaveLength(1);
+  expect(ast.scopes[0].types.get('structType')!.references).toHaveLength(2);
+  expect(ast.scopes[0].functions.get('useMe')!.references).toHaveLength(2);
+  expect(ast.scopes[2].bindings.get('arg1')!.references).toHaveLength(2);
+  expect(ast.scopes[2].bindings.get('arg2')!.references).toHaveLength(1);
+  expect(ast.scopes[2].bindings.get('shadowed')!.references).toHaveLength(4);
   // reused - used in inner scope
-  expect(ast.scopes[0].bindings.reused.references).toHaveLength(4);
+  expect(ast.scopes[0].bindings.get('reused')!.references).toHaveLength(4);
   // compound - used in first innermost scope only
-  expect(ast.scopes[4].bindings.compound.references).toHaveLength(2);
+  expect(ast.scopes[4].bindings.get('compound')!.references).toHaveLength(2);
   // compound - used in last innermost scope only
-  expect(ast.scopes[5].bindings.compound.references).toHaveLength(3);
+  expect(ast.scopes[5].bindings.get('compound')!.references).toHaveLength(3);
 });
 
 test('declarations', () => {
@@ -554,7 +554,7 @@ struct light {
 };
 light lightVar = light(3.0, vec3(1.0, 2.0, 3.0));
 `);
-  expect(ast.scopes[0].types.light.references).toHaveLength(3);
+  expect(ast.scopes[0].types.get('light')!.references).toHaveLength(3);
 });
 
 test('overloaded scope test', () => {
@@ -565,7 +565,7 @@ vec4 overloaded(vec4 x) {
 float overloaded(float x) {
     return x;
 }`);
-  expect(ast.scopes[0].functions.overloaded.references).toHaveLength(2);
+  expect(ast.scopes[0].functions.get('overloaded')!.references).toHaveLength(2);
 });
 
 test('overriding glsl builtin function', () => {
@@ -698,12 +698,12 @@ void main() {
   renameBindings(ast.scopes[0], (name) => `${name}_y`);
   renameTypes(ast.scopes[0], (name) => `${name}_x`);
 
-  expect(Object.keys(ast.scopes[0].functions)).toEqual(['main']);
-  expect(Object.keys(ast.scopes[0].bindings)).toEqual(['reflectedLight']);
-  expect(Object.keys(ast.scopes[0].types)).toEqual(['StructName']);
-  expect(ast.scopes[0].types.StructName.references).toHaveLength(3);
+  expect([...ast.scopes[0].functions.keys()]).toEqual(['main']);
+  expect([...ast.scopes[0].bindings.keys()]).toEqual(['reflectedLight']);
+  expect([...ast.scopes[0].types.keys()]).toEqual(['StructName']);
+  expect(ast.scopes[0].types.get('StructName')!.references).toHaveLength(3);
 
-  expect(Object.keys(ast.scopes[1].types)).toEqual(['StructName']);
+  expect([...ast.scopes[1].types.keys()]).toEqual(['StructName']);
 
   // console.log(generate(ast));
 });

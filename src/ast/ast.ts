@@ -1,8 +1,6 @@
 import type { AstNode, LocationObject } from './node.js';
 
-export type ScopeIndex = {
-  [name: string]: { references: AstNode[] };
-};
+export type ScopeIndex = Map<string, { references: AstNode[] }>;
 
 export type Scope = {
   name: string;
