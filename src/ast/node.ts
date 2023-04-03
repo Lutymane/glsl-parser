@@ -94,7 +94,7 @@ export interface ContinueStatementNode extends BaseNode {
 
 export interface DeclarationStatementNode extends BaseNode {
   type: 'declaration_statement';
-  declaration: any;
+  declaration: DeclarationNode | FunctionPrototypeNode;
   semi: LiteralNode;
 }
 
@@ -176,7 +176,7 @@ export interface ForStatementNode extends BaseNode {
 
 export interface FullySpecifiedTypeNode extends BaseNode {
   type: 'fully_specified_type';
-  qualifiers: any[];
+  qualifiers: any[] | null;
   specifier: TypeSpecifierNode;
 }
 

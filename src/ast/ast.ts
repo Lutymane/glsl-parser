@@ -1,6 +1,24 @@
-import type { AstNode, LocationObject } from './node.js';
+import type {
+  AstNode,
+  DeclarationNode,
+  FullySpecifiedTypeNode,
+  IdentifierNode,
+  LocationObject,
+  ParameterDeclarationNode,
+} from './node.js';
 
-export type ScopeIndex = Map<string, { references: AstNode[] }>;
+export type ScopeIndex = Map<
+  string,
+  {
+    initializer:
+      | (DeclarationNode & {
+          specified_type: FullySpecifiedTypeNode;
+        })
+      | ParameterDeclarationNode
+      | IdentifierNode;
+    references: AstNode[];
+  }
+>;
 
 export type Scope = {
   name: string;

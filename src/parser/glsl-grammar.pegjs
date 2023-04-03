@@ -1151,7 +1151,12 @@ init_declarator_list
         head.declaration, ...tail.map(t => t[1])
       ].filter(decl => !!decl.identifier);
 
-      createBindings(scope, ...declarations.map(decl => [decl.identifier.identifier, decl]));
+      createBindings(scope, ...declarations.map(decl => {
+        // @note specified_type is fully_qualified_type which apparently includes different things like in, out and etc
+        decl.specified_type = head.specified_type;
+        
+        return [decl.identifier.identifier, decl];
+      }));
 
       return node(
         'declarator_list',
