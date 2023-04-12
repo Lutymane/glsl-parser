@@ -4,7 +4,7 @@
  * *any* types where I was lazy or didn't know the core type.
  */
 
-type LocationInfo = { offset: number; line: number; column: number };
+export type LocationInfo = { offset: number; line: number; column: number };
 
 export type LocationObject = {
   start: LocationInfo;
@@ -188,7 +188,7 @@ export interface FunctionNode extends BaseNode {
 
 export interface FunctionCallNode extends BaseNode {
   type: 'function_call';
-  identifier: AstNode;
+  identifier: TypeSpecifierNode;
   lp: LiteralNode;
   args: any[];
   rp: LiteralNode;
@@ -204,7 +204,7 @@ export interface FunctionHeaderNode extends BaseNode {
 export interface FunctionPrototypeNode extends BaseNode {
   type: 'function_prototype';
   header: FunctionHeaderNode;
-  parameters: any[];
+  parameters: any[] | undefined;
   commas: LiteralNode[];
   rp: LiteralNode;
 }
@@ -268,7 +268,7 @@ export interface LayoutQualifierNode extends BaseNode {
 
 export interface ParameterDeclarationNode extends BaseNode {
   type: 'parameter_declaration';
-  qualifier: any[];
+  qualifier: KeywordNode[];
   declaration: ParameterDeclaratorNode | TypeSpecifierNode;
 }
 
@@ -328,7 +328,7 @@ export interface ReturnStatementNode extends BaseNode {
 export interface StructNode extends BaseNode {
   type: 'struct';
   lb: LiteralNode;
-  declarations: any[];
+  declarations: StructDeclarationNode[];
   rb: LiteralNode;
   struct: KeywordNode;
   typeName: IdentifierNode;

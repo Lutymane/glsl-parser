@@ -89,10 +89,12 @@ export const renameFunctions = (
         );
         // Structs type names also become constructors. However, their renaming is
         // handled by bindings
-      } else if (node.type !== 'struct') {
-        console.log(node);
-        throw new Error(`Function for type ${node.type} not recognized`);
       }
+      // @note it's not the case with struct anymore???
+      //  else if (node.type !== 'struct') {
+      //   console.log(node);
+      //   throw new Error(`Function for type ${node.type} not recognized`);
+      // }
     });
   }
 };

@@ -2,12 +2,17 @@ import type {
   AstNode,
   DeclarationNode,
   FullySpecifiedTypeNode,
+  FunctionCallNode,
+  FunctionNode,
+  FunctionPrototypeNode,
   IdentifierNode,
+  InterfaceDeclaratorNode,
   LocationObject,
   ParameterDeclarationNode,
+  StructNode,
 } from './node.js';
 
-export type ScopeIndex = Map<
+export type ScopeIndex<T extends AstNode = AstNode> = Map<
   string,
   {
     initializer:
@@ -16,16 +21,23 @@ export type ScopeIndex = Map<
         })
       | ParameterDeclarationNode
       | IdentifierNode;
-    references: AstNode[];
+    references: T[];
   }
 >;
 
 export type Scope = {
   name: string;
   parent?: Scope;
-  bindings: ScopeIndex;
-  types: ScopeIndex;
-  functions: ScopeIndex;
+  bindings: ScopeIndex<
+    | DeclarationNode
+    | ParameterDeclarationNode
+    | IdentifierNode
+    | InterfaceDeclaratorNode
+  >;
+  types: ScopeIndex<StructNode | IdentifierNode | FunctionCallNode>;
+  functions: ScopeIndex<
+    FunctionPrototypeNode | FunctionNode | FunctionCallNode
+  >;
   location: LocationObject;
 };
 
